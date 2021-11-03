@@ -28,3 +28,23 @@
                    (every? (fn [x] (not= iname x))
                            except_names))))))
 
+(defn from_json_get_extra_vhosts [json]
+  (from_json_get_extra_ json
+                        "vhosts"
+                        [:name]))
+
+(defn from_json_get_extra_exchanges [json]
+  (from_json_get_extra_ json
+                        "exchanges"
+                        [:name
+                         :type
+                         :vhost]))
+
+(defn from_json_get_extra_bindings [json]
+  (from_json_get_extra_ json
+                        "bindings"
+                        [:destination
+                         :destination_type
+                         :routing_key
+                         :source
+                         :vhost]))
