@@ -48,3 +48,11 @@
                          :routing_key
                          :source
                          :vhost]))
+
+(defn generate_ansible_output [json]
+  {:rabbitmq_extra_vhosts
+   (from_json_get_extra_vhosts    json)
+   :rabbitmq_extra_exchanges
+   (from_json_get_extra_exchanges json)
+   :rabbitmq_extra_bindings
+    (from_json_get_extra_bindings  json)})
