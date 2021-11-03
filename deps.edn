@@ -1,5 +1,7 @@
 {:paths ["src" "resources"]
- :deps {org.clojure/clojure {:mvn/version "1.10.3"}}
+ :deps {org.clojure/clojure  {:mvn/version "1.10.3"}
+        clj-commons/clj-yaml {:mvn/version "0.7.0"}
+        cheshire/cheshire    {:mvn/version "5.10.1"}}
  :aliases
  {:build {:deps {io.github.seancorfield/build-clj
                  {:git/tag "v0.4.0" :git/sha "54e39ae"}}
