@@ -21,12 +21,7 @@
   ([json json_key]
    (from_json_get_extra_ json json_key [:name]))
   ([json json_key fields]
-   (retrieve_key_values_from_json json json_key fields))
-  ([json json_key fields except_names]
-   (->> (from_json_get_extra_ json json_key fields)
-        (filter #(let [iname (% :name)]
-                   (every? (fn [x] (not= iname x))
-                           except_names))))))
+   (retrieve_key_values_from_json json json_key fields)))
 
 (defn from_json_get_extra_vhosts [json]
   (from_json_get_extra_ json
@@ -52,7 +47,8 @@
 (defn generate_ansible_output [json]
   {:rabbitmq_extra_vhosts
    (from_json_get_extra_vhosts    json)
-   :rabbitmq_extra_exchanges
+   :rabbitmq_extra_exchanges 
    (from_json_get_extra_exchanges json)
    :rabbitmq_extra_bindings
-    (from_json_get_extra_bindings  json)})
+   (from_json_get_extra_bindings  json)})
+
