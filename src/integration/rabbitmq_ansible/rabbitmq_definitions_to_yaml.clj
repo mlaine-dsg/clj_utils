@@ -1,7 +1,6 @@
-(ns integration.clj-utils)
-
-(require '[cheshire.core :as json]
-         '[clj-yaml.core :as yaml])
+(ns integration.rabbitmq-ansible.rabbitmq-definitions-to-yaml
+  (:require [cheshire.core :as json]
+            [clj-yaml.core :as yaml]))
 
 (defn transmogrify_fields_for_ansible
   ([param]
