@@ -1,6 +1,7 @@
 (ns integration.clj-utils)
 
-(require '[cheshire.core :as json])
+(require '[cheshire.core :as json]
+         '[clj-yaml.core :as yaml])
 
 (defn transmogrify_fields_for_ansible
   ([param]
@@ -23,6 +24,11 @@
   ([json json_key fields]
    (retrieve_key_values_from_json json json_key fields)))
 
+(defn edn_to_yaml [edn]
+  (yaml/generate-string
+    edn
+    :dumper-options {:flow-style :block}))
+
 (defn from_json_get_extra_vhosts [json]
   (from_json_get_extra_ json
                         "vhosts"
@@ -44,11 +50,23 @@
                          :source
                          :vhost]))
 
-(defn generate_ansible_output [json]
-  {:rabbitmq_extra_vhosts
-   (from_json_get_extra_vhosts    json)
-   :rabbitmq_extra_exchanges 
-   (from_json_get_extra_exchanges json)
-   :rabbitmq_extra_bindings
-   (from_json_get_extra_bindings  json)})
+(defn generate_ansible_yaml [json]
+  (edn_to_yaml
+    {:rabbitmq_extra_vhosts
+    (from_json_get_extra_vhosts    json)
+    :rabbitmq_extra_exchanges 
+    (from_json_get_extra_exchanges json)
+    :rabbitmq_extra_bindings
+    (from_json_get_extra_bindings  json)}))
 
+(defn generate_single_vhost_params_yaml [json vhost]
+  (edn_to_yaml
+    {:vhosts
+    (let [vhosts (from_json_get_extra_vhosts json)]
+     (filter (fn [x] (= (x :name) vhost)) vhosts))
+    :exchanges
+    (let [exchanges (from_json_get_extra_exchanges json)]
+     (filter (fn [x] (= (x :vhost) vhost)) exchanges))
+    :bindings
+    (let [bindings (from_json_get_extra_bindings json)]
+     (filter (fn [x] (= (x :vhost) vhost)) bindings))}))
